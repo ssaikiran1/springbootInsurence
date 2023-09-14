@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataTables Example with JSON Data</title>
+
+  <!-- jQuery library -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+  <!-- jQuery Form Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
+
+    <style>
+        /* Custom CSS for the table */
+        #dataTable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #dataTable td, #dataTable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #dataTable tr:nth-child(even) {
+            background-color: cream; /* Change the row color to cream */
+        }
+
+        #dataTable tr:hover {
+            background-color: #ddd;
+        }
+
+        #dataTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: gold;
+            color: black;
+        }
+
+        /* Custom CSS for the form */
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
+            width: 30%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        input[type="button"],
+        input[type="reset"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+
+
+</head>
+
+<body><center>
+<form onsubmit="return false" >
+	<label color="">First Name: </label><input type="text" id="fname">
+	<label>Last Name: </label><input type="text" id="lname"></br></br>
+	<label>D.O.B: </label><input type="date" id="dob">
+	<label>Address: </label><input type="text" id="add"></br></br>
+	<label>Gender: </label><input type="text" id="gender">
+	<label>Aadhar: </label><input type="number" id="aad"></br></br>
+	<input type="reset" id="sub" value="submit" >
+	<input type="button" id="getall" value="get all packages">
+	</form>
+
+
+
+</br></br>
+  <table id="dataTable" class="display" style="width:100%" border=1>
+    <thead>
+      <tr>
+      <th>ID</th>
+        <th>TITLE</th>
+        <th>DESCRIPTION</th>
+        <th>STATUS</th>
+        <th>INSURENCE RANGE START</th>
+        <th>INSURENCE RANGE END</th>
+        <th>INSURENCE AGELIMIT START</th>
+        <th>INSURENCE AGELIMIT  END</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- JSON data will be inserted here -->
+    </tbody>
+  </table>
+
+
+  <script>
+    $(document).ready(function () {
+    	$('#getall').click(function(){
+    	$.ajax({
+    		url:'/allpacks',
+    		type:'get',
+    		data:'json',
+    		success: function(response){
+    			console.log(response[0]);
+    			 $('#dataTable').DataTable({
+    			        data: response,
+    			        columns: [
+    			          {data: 'insp_id'},
+    			          {data: 'insp_title'},
+    			          {data: 'insp_des'},
+    			          {data: 'insp_status'},
+    			          {data: 'insp_range_start'},
+    			          {data: 'insp_range_end'},
+    			          {data: 'insp_agelimit_start'},
+    			          {data: 'insp_agelimit_end'},
+    			        ]
+    			      });
+    		}		
+    	});
+    	});
+    });
+    
+    
+    
+    $(document).ready(function(){
+    	$('#sub').click(function(){
+    	var fn=$('#fname').val();
+    	var ln=$('#lname').val();
+    	var dob=$('#dob').val();
+    	var add=$('#add').val();
+    	var gen=$('#gender').val();
+    	var aadh=$('#aad').val();
+    	
+    	var load={
+    			firstName: fn,
+    			lastNmae: ln,
+    			dateOfBirth: dob,
+    			address: add,
+    			gender: gen,
+    			aadhar: aadh,
+    	};
+    	
+    	$.ajax({
+    		url:'/adduser',
+    		type:'post',
+    		data: JSON.stringify(load),
+    		contentType: 'application/json',
+    		success: function(response){
+    			alert("user added");
+    		}
+    	});
+    	});
+    });
+    
+    
+    
+  </script></center>
+</body>
+
+</html>
